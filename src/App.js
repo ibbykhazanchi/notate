@@ -5,6 +5,7 @@ import {useEffect, useState} from 'react'
 function App() {
   const [url, setUrl] = useState(null)
   const [responseFromContent, setResponseFromContent] = useState('')
+  const [highlightedSnippets, setHighlightedSnippets] = useState([])
 
   useEffect(() => {
     const queryInfo = {active: true, lastFocusedWindow:true}
@@ -37,7 +38,10 @@ function App() {
 
   const contentListener = (request, sender, sendResponse) => {
     if(request.from === "content.js" && request.type === 0){
-      setResponseFromContent(request.message)
+      const snippet = request.message
+      const snippetArr = highlightedSnippets.slice()
+      snippetArr.push(snippet)
+      setHighlightedSnippets(snippetArr)
     }
   }
   chrome.runtime.onMessage.addListener(contentListener)
@@ -54,6 +58,14 @@ function App() {
         <p>
           {responseFromContent}
         </p>
+
+        {highlightedSnippets.length > 0 && (
+          <ul>
+            {highlightedSnippets.map(snippet => (
+              <li>{snippet}</li>
+            ))}
+          </ul>
+        )}
       </header>
     </div>
   );

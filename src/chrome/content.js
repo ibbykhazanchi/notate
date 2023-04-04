@@ -23,6 +23,7 @@ const messagesFromReactAppListener = (message, sender, response) => {
 }
 
 const mediumHighlighter = document.createElement("medium-highlighter");
+
 document.body.appendChild(mediumHighlighter);
 
 const setMarkerPosition = (markerPosition) =>
@@ -73,7 +74,7 @@ function getMarkerPosition() {
 
 const main = () => {
     console.log('[content.js] main')
-    // document.addEventListener("selectionchange", higlightedTextListener)
+    
     chrome.runtime.onMessage.addListener(messagesFromReactAppListener)
 }
 
