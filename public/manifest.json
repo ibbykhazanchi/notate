@@ -1,0 +1,35 @@
+{
+  "name": "Hello Extensions",
+  "description": "Base Level Extension",
+  "version": "1.0",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_title": "Open the popup"
+  },
+  "icons": {
+    "16": "logo192.png",
+    "48": "logo192.png",
+    "128": "logo192.png"
+  },
+  "permissions": [
+    "tabs",
+    "activeTab"
+  ],
+  "optional_permissions":[
+    "<all_urls>"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": [
+        "./static/js/content.js",
+        "./static/js/@webcomponents/custom-elements/custom-elements.min.js",
+        "./static/js/highlighter.js"
+      ],
+      "all_frames": false,
+      "run_at": "document_end"
+    }
+  ]
+}
