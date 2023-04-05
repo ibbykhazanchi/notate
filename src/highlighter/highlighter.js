@@ -89,14 +89,8 @@ class MediumHighlighter extends HTMLElement {
     // set the snippet to the array
     chrome.storage.local.get(currentUrl, (data) => {
       const highlightedText = userSelection.toString()
-      if(data && data[currentUrl]){
-        const snippets = data[currentUrl]
-        snippets.push(highlightedText)
-
-        chrome.storage.local.set({ [currentUrl]: snippets });
-      } else {
-        chrome.storage.local.set({ [currentUrl]: [highlightedText] });
-      }
+      const snippets = [...(data[currentUrl] || []), highlightedText]
+      chrome.storage.local.set({ [currentUrl]: snippets });
       window.getSelection().empty();
     })
   }
