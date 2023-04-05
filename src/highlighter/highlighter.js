@@ -75,8 +75,6 @@ class MediumHighlighter extends HTMLElement {
 
   highlightSelection() {
 
-    console.log("HIGHLIGHTING!")
-
     //first highlight the selection
     var userSelection = window.getSelection();
     for (let i = 0; i < userSelection.rangeCount; i++) {
@@ -85,50 +83,22 @@ class MediumHighlighter extends HTMLElement {
     
     // set the url 
     const currentUrl = window.location.href
-    chrome.storage.local.set({'url': currentUrl}, () => {
-      console.log("saved url")
-    })
-
-    // get the url
-    chrome.storage.local.get('url', (data) => {
-      console.log(data.url)
-    })
 
     // chrome.storage.local.remove(currentUrl, () => {console.log("removedKey")})
 
     // set the snippet to the array
     chrome.storage.local.get(currentUrl, (data) => {
+      const highlightedText = userSelection.toString()
       if(data && data[currentUrl]){
         const snippets = data[currentUrl]
-        console.log(snippets)
+        snippets.push(highlightedText)
 
-        snippets.push(userSelection.toString())
-
-        chrome.storage.local.set({ [currentUrl]: snippets }, function() {
-          console.log('Array changed.');
-          window.getSelection().empty();
-        });
+        chrome.storage.local.set({ [currentUrl]: snippets });
       } else {
-        console.log("BAD")
-
-        chrome.storage.local.set({ [currentUrl]: [userSelection.toString()] }, function() {
-          console.log('Array saved.');
-          window.getSelection().empty();
-        });
+        chrome.storage.local.set({ [currentUrl]: [highlightedText] });
       }
+      window.getSelection().empty();
     })
-
-    // const snippets = JSON.parse(localStorage.getItem(currentUrl) || "[]")
-    // snippets.push(userSelection.toString())
-    // localStorage.setItem(window.location.href, JSON.stringify(snippets))
-
-    // //now send it to react
-    // chrome.runtime.sendMessage({
-    //   from: "content.js",
-    //   type: 0,
-    //   message: userSelection.toString()
-    // })
-
   }
 
   highlightRange(range) {
