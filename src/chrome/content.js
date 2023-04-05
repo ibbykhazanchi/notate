@@ -1,27 +1,3 @@
-const messagesFromReactAppListener = (message, sender, response) => {
-    console.log('[content.js]. Message received', {
-        message,
-        sender
-    })
-
-    if(
-        sender.id === chrome.runtime.id &&
-        message.from === "react" &&
-        message.message === "hello from react"
-    ) {
-        response('hello from content.js')
-    }
-
-    if(
-        sender.id === chrome.runtime.id &&
-        message.from === 'react' &&
-        message.message === "delete logo"
-    ) {
-        const logo = document.getElementById('hplogo')
-        logo.parentElement.removeChild(logo)
-    }
-}
-
 const mediumHighlighter = document.createElement("medium-highlighter");
 
 document.body.appendChild(mediumHighlighter);
@@ -33,7 +9,6 @@ const setMarkerPosition = (markerPosition) =>
   );
 
 const getSelectedText = () => window.getSelection().toString();
-
 document.addEventListener("click", () => {
   if (getSelectedText().length > 0) {
     setMarkerPosition(getMarkerPosition());
@@ -58,24 +33,3 @@ function getMarkerPosition() {
     display: "flex",
   };
 }
-
-
-// const higlightedTextListener = () => {
-//     const selectedText = getSelectedText()
-//     if(selectedText && selectedText.length > 0){
-//         console.log(selectedText)
-//     }
-//     chrome.runtime.sendMessage({
-//         from: "content.js",
-//         type: 0,
-//         message: selectedText
-//     })
-// }
-
-const main = () => {
-    console.log('[content.js] main')
-    
-    chrome.runtime.onMessage.addListener(messagesFromReactAppListener)
-}
-
-main()

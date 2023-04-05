@@ -14,7 +14,8 @@
   },
   "permissions": [
     "tabs",
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
   "optional_permissions":[
     "<all_urls>"
