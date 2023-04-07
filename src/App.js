@@ -1,5 +1,6 @@
 import './App.css';
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
+import { sendToNotion } from './Notion';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
     <div className="App">
       <header className="App-header">
 
+        <p> Notes {url ? `for ${url}` : ''} </p>
         {snippets && snippets.length > 0 && (
           <ul>
             {snippets.map(snippet => (
@@ -34,7 +36,8 @@ function App() {
           </ul>
         )}
 
-        <p>{url}</p>
+        <button onClick={ () => sendToNotion(snippets) }> Send to Notion! </button>
+
       </header>
     </div>
   );

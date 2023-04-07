@@ -1,5 +1,13 @@
+const dotEnv = require('dotenv')
+const webpack = require('webpack')
+
+const env = dotEnv.config({ path: `./.env.local` }).parsed;
+
 module.exports = {
     webpack: {
+        plugins: [
+            new webpack.DefinePlugin(Object.keys(env))
+        ],
         configure: (webpackConfig, {env, paths}) => {
             return {
                 ...webpackConfig,
@@ -20,6 +28,6 @@ module.exports = {
                     runtimeChunk: false,
                 }
             }
-        },
+        }
     }
 }
