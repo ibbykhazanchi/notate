@@ -10,7 +10,6 @@ function App() {
   const [title, setTitle] = useState('')
 
 
-
   // gets the URL & gets the title
   useEffect(() => {
     const queryInfo = {active: true, lastFocusedWindow: true}
@@ -63,6 +62,17 @@ function App() {
     setTitle(event.target.value)
   }
 
+  const sendToNotionHandler = () => {
+    if(sendSnippetsToNotion(snippets, title)){
+      //clear snippets
+      setSnippets([])
+
+      // delete cached itemes
+      chrome.storage.local.remove(url)  
+      chrome.storage.local.remove(`${url}:notionPageTitle`)
+    }
+  }
+
   return (
     <div className="App">
       <TitleForm 
@@ -73,7 +83,9 @@ function App() {
  
       />
 
-      <button onClick={ () => sendSnippetsToNotion(snippets, title) }> Send to Notion! </button>
+      <button onClick={ 
+        () => sendToNotionHandler() 
+      }> Send to Notion! </button>
   
       {snippets && snippets.length > 0 && (
         <ul>

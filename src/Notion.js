@@ -2,7 +2,7 @@ import { Client } from '@notionhq/client'
 
 const notion = new Client({ auth: process.env.REACT_APP_NOTION_KEY });
 
-export const createNotionPage = async title => {
+const createNotionPage = async title => {
   console.log(title)
   
   try {
@@ -57,7 +57,12 @@ export const sendSnippetsToNotion = async (snippets, title) => {
       children: blocks
   })
 
-  console.log(response)
+  if(response.object.error){
+    console.error(response.object.error)
+    return false
+  } else {
+    return true
+  }
 }
 
 const mapSnippetsToBlocks = snippets => {
