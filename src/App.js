@@ -10,6 +10,8 @@ function App() {
   const [title, setTitle] = useState('')
 
 
+
+  // gets the URL & gets the title
   useEffect(() => {
     const queryInfo = {active: true, lastFocusedWindow: true}
 
@@ -25,6 +27,7 @@ function App() {
   }, [])
 
   // when the URL changes, you need to reload snippets and title
+  // getting preloaded data
   useEffect(() => {
     chrome.storage.local.get(url, (data) => {
       setSnippets(data[url])
@@ -63,7 +66,7 @@ function App() {
   return (
     <div className="App">
       <TitleForm 
-      
+
         inputValue={title} 
         handleInputKeyDown = {formOnEnter}
         handleChange = { handleChange }
