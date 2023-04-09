@@ -1,102 +1,21 @@
-import './App.css';
-import { useEffect, useState } from 'react'
-import { sendSnippetsToNotion } from './Notion';
-import { TitleForm } from './components';
+import { useState } from "react";
+import { Login, Main } from './pages'
 
-function App() {
+const App = () => {
 
-  const [url, setUrl] = useState("")
-  const [snippets, setSnippets] = useState([])
-  const [title, setTitle] = useState('')
-
-
-  // gets the URL & gets the title
-  useEffect(() => {
-    const queryInfo = {active: true, lastFocusedWindow: true}
-
-    chrome.tabs && chrome.tabs.query(queryInfo, tabs => {
-      setUrl(tabs[0].url)
-    })
-
-    chrome.storage.local.get('notionPageTitle', (data) => {
-      if(data.notionPageTitle){
-        setTitle(data.notionPageTitle)
-      }
-    })
-  }, [])
-
-  // when the URL changes, you need to reload snippets and title
-  // getting preloaded data
-  useEffect(() => {
-    chrome.storage.local.get(url, (data) => {
-      setSnippets(data[url])
-
-      //try to get the saved title
-      chrome.storage.local.get(`${url}:notionPageTitle`, (data) => {
-        if(data[`${url}:notionPageTitle`]) {
-          setTitle(data[`${url}:notionPageTitle`])
-        } else {
-          setTitle('')
-        }
-      })
-    })
-  }, [url])
-
-  const formOnEnter = (event) => {
-    if (event.keyCode === 13) { // Check for Enter key press
-      event.preventDefault();
-
-      const titleForm = document.getElementById("title-form")
-      const inputTitle = titleForm.value
-      titleForm.blur(); // Remove focus from input
-
-      setTitle(inputTitle)
-
-      // now cache it
-      const key = `${url}:notionPageTitle`
-      chrome.storage.local.set({ [ key ]: inputTitle})
-    }
-  };
-
-  const handleChange = (event) => {
-    setTitle(event.target.value)
-  }
-
-  const sendToNotionHandler = () => {
-    if(sendSnippetsToNotion(snippets, title)){
-      //clear snippets
-      setSnippets([])
-
-      // delete cached itemes
-      chrome.storage.local.remove(url)  
-      chrome.storage.local.remove(`${url}:notionPageTitle`)
-    }
-  }
+  const [token, setToken] = useState(true)
 
   return (
-    <div className="App">
-      <TitleForm 
-
-        inputValue={title} 
-        handleInputKeyDown = {formOnEnter}
-        handleChange = { handleChange }
- 
-      />
-
-      <button onClick={ 
-        () => sendToNotionHandler() 
-      }> Send to Notion! </button>
-  
-      {snippets && snippets.length > 0 && (
-        <ul>
-          {snippets.map(snippet => (
-            <li> { snippet } </li>
-          ))}
-        </ul>
-      )}
-
-    </div>
-  );
+    <>
+    {!token ? (
+      <Login />
+    ) : (
+      <> 
+        <Main />
+      </>
+    )}
+    </>
+  )
 }
 
 export default App;
