@@ -4,7 +4,20 @@ import { TitleForm } from '../components';
 import Button from 'react-bootstrap/Button'
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton'
+import styled from 'styled-components/macro';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGear } from '@fortawesome/free-solid-svg-icons'
 
+const StyledDropDownDiv = styled.div`
+  position: absolute;
+  top: 12px;
+  right: 16px;
+`
+const Toggle = styled(Dropdown.Toggle)`
+    :after {
+        display: none;
+    }
+`;
 const Main = () => {
 
   const [url, setUrl] = useState("")
@@ -78,17 +91,23 @@ const Main = () => {
 
   return (
     <>
-      <DropdownButton id="dropdown-basic-button" autoClose={'outside'} drop='start'>
-            <Dropdown.Item href="#/action-3"> 
-            Root Notion Folder 
-            <form>
-              <input
-                type='text'
-              >
-              </input>
-            </form>
-            </Dropdown.Item>
-      </DropdownButton> 
+      <StyledDropDownDiv>
+        <DropdownButton 
+        id="dropdown-basic-button" autoClose={'outside'} drop='down' size='sm'
+        title= {<FontAwesomeIcon icon={faGear} />}
+        >
+              <Dropdown.Item href="#/action-3"> 
+              Root Notion Folder 
+              <form>
+                <input
+                  type='text'
+                >
+                </input>
+              </form>
+              </Dropdown.Item>
+        </DropdownButton> 
+      </StyledDropDownDiv>
+
       
       <TitleForm 
 
