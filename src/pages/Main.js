@@ -96,7 +96,7 @@ const Main = () => {
         id="dropdown-basic-button" autoClose={'outside'} drop='down' size='sm'
         title= {<FontAwesomeIcon icon={faGear} />}
         >
-              <Dropdown.Item href="#/action-3"> 
+              <Dropdown.ItemText href="#/action-3"> 
               Root Notion Folder 
               <form>
                 <input
@@ -104,7 +104,7 @@ const Main = () => {
                 >
                 </input>
               </form>
-              </Dropdown.Item>
+              </Dropdown.ItemText>
         </DropdownButton> 
       </StyledDropDownDiv>
 
