@@ -1,77 +1,51 @@
 import { useEffect, useState } from 'react'
 import { sendSnippetsToNotion } from '../Notion';
-import { TitleForm } from '../components';
+import { StyledDropDown } from '../components';
 import Button from 'react-bootstrap/Button'
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton'
+import Container from 'react-bootstrap/Container'
+import Form from 'react-bootstrap/Form'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import styled from 'styled-components/macro';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear } from '@fortawesome/free-solid-svg-icons'
 
-const StyledDropDownDiv = styled.div`
-  position: absolute;
-  top: 12px;
-  right: 16px;
-`
-const Toggle = styled(Dropdown.Toggle)`
-    :after {
-        display: none;
-    }
-`;
+
 const Main = () => {
 
   const [url, setUrl] = useState("")
   const [snippets, setSnippets] = useState([])
-  const [title, setTitle] = useState('')
+  const [title, setTitle] = useState("")
+  const [validated, setValidated] = useState(false);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+      setValidated(true);
+    } else {
+      setValidated(false);
+      sendToNotionHandler()
+    }
+  };
 
 
-  // gets the URL & gets the title
+  // gets the URL
   useEffect(() => {
     const queryInfo = {active: true, lastFocusedWindow: true}
 
     chrome.tabs && chrome.tabs.query(queryInfo, tabs => {
-      setUrl(tabs[0].url)
-    })
-
-    chrome.storage.local.get('notionPageTitle', (data) => {
-      if(data.notionPageTitle){
-        setTitle(data.notionPageTitle)
+      if(tabs[0] && tabs[0].url){
+        setUrl(tabs[0].url)
       }
     })
   }, [])
 
-  // when the URL changes, you need to reload snippets and title
-  // getting preloaded data
+  // when the URL changes, you need to reload snippets
   useEffect(() => {
     chrome.storage.local.get(url, (data) => {
       setSnippets(data[url])
-
-      //try to get the saved title
-      chrome.storage.local.get(`${url}:notionPageTitle`, (data) => {
-        if(data[`${url}:notionPageTitle`]) {
-          setTitle(data[`${url}:notionPageTitle`])
-        } else {
-          setTitle('')
-        }
-      })
     })
   }, [url])
-
-  const formOnEnter = (event) => {
-    if (event.keyCode === 13) { // Check for Enter key press
-      event.preventDefault();
-
-      const titleForm = document.getElementById("title-form")
-      const inputTitle = titleForm.value
-      titleForm.blur(); // Remove focus from input
-
-      setTitle(inputTitle)
-
-      // now cache it
-      const key = `${url}:notionPageTitle`
-      chrome.storage.local.set({ [ key ]: inputTitle})
-    }
-  };
 
   const handleChange = (event) => {
     setTitle(event.target.value)
@@ -79,48 +53,44 @@ const Main = () => {
 
   const sendToNotionHandler = () => {
     if(sendSnippetsToNotion(snippets, title)){
-      //clear snippets
-      setSnippets([])
-      setTitle('')
 
-      // delete cached itemes
-      chrome.storage.local.remove(url)  
-      chrome.storage.local.remove(`${url}:notionPageTitle`)
+      // clear snippets
+      setSnippets([])
+      setTitle('') 
+
+      // delete cached snippets
+      chrome.storage.local.remove(url)
     }
   }
 
   return (
     <>
-      <StyledDropDownDiv>
-        <DropdownButton 
-        id="dropdown-basic-button" autoClose={'outside'} drop='down' size='sm'
-        title= {<FontAwesomeIcon icon={faGear} />}
-        >
-              <Dropdown.ItemText href="#/action-3"> 
-              Root Notion Folder 
-              <form>
-                <input
-                  type='text'
-                >
-                </input>
-              </form>
-              </Dropdown.ItemText>
-        </DropdownButton> 
-      </StyledDropDownDiv>
-
       
-      <TitleForm 
+      <Container>
 
-        inputValue={title} 
-        handleInputKeyDown = {formOnEnter}
-        handleChange = { handleChange }
- 
-      />
+      <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Row>
+          <Col xs={7}>
+            <Form.Control 
+              type="text" 
+              placeholder="Enter a Title"
+              value={title}
+              onChange={handleChange}
+              className='mb-2 mt-3'
+              required
+            />
+          </Col>
+          <Col>
+            <StyledDropDown />
+          </Col>
+        </Row>
+          <Row>
+            <Col xs={7}>
+              <Button type='submit'> Send to Notion </Button>
+            </Col>
+        </Row>
+      </Form>
 
-      <Button onClick={ 
-        () => sendToNotionHandler() 
-      }> Send to Notion! </Button>
-  
       {snippets && snippets.length > 0 && (
         <ul>
           {snippets.map(snippet => (
@@ -128,6 +98,8 @@ const Main = () => {
           ))}
         </ul>
       )}
+
+      </Container>
     </>
   );
 }
