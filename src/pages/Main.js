@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import { sendSnippetsToNotion } from '../Notion';
-import { StyledDropDown } from '../components';
+import { StyledDropDown, Snippet } from '../components';
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styled from 'styled-components/macro';
+
+import Card from 'react-bootstrap/Card'
+
 
 
 const Main = () => {
@@ -86,17 +89,17 @@ const Main = () => {
         </Row>
           <Row>
             <Col xs={7}>
-              <Button type='submit'> Send to Notion </Button>
+              <Button type='submit' variant='info'> Send to Notion </Button>
             </Col>
         </Row>
       </Form>
 
       {snippets && snippets.length > 0 && (
-        <ul>
-          {snippets.map(snippet => (
-            <li> { snippet } </li>
-          ))}
-        </ul>
+        snippets.map((snip) => 
+          <div className='m-2'>
+            <Snippet text = { snip } />
+          </div>
+        )
       )}
 
       </Container>

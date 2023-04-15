@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Login, Main } from './pages'
+import { GlobalStyle } from "./styles";
 
 const App = () => {
 
@@ -7,13 +8,15 @@ const App = () => {
 
   return (
     <>
-    {!token ? (
-      <Login />
-    ) : (
-      <> 
-        <Main />
-      </>
-    )}
+      <GlobalStyle />
+      
+      {!token ? (
+        <Login />
+      ) : (
+        <> 
+          <Main />
+        </>
+      )}
     </>
   )
 }
