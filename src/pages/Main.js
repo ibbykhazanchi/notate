@@ -7,8 +7,7 @@ import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styled from 'styled-components/macro';
-
-import Card from 'react-bootstrap/Card'
+import InputGroup from 'react-bootstrap/InputGroup'
 
 
 
@@ -84,23 +83,34 @@ const Main = () => {
             />
           </Col>
           <Col>
-            <StyledDropDown />
+            <InputGroup>
+              <StyledDropDown />            
+            </InputGroup>
           </Col>
         </Row>
           <Row>
             <Col xs={7}>
-              <Button type='submit' variant='info'> Send to Notion </Button>
+              <Button type='submit'> Send to Notion </Button>
             </Col>
         </Row>
       </Form>
-
+      
       {snippets && snippets.length > 0 && (
-        snippets.map((snip) => 
-          <div className='m-2'>
-            <Snippet text = { snip } />
-          </div>
-        )
-      )}
+        snippets.map((snip, index) => {
+          return (
+            index === 0 ? (
+              <div className='m-2 mt-3 mb-2 ml-2 mr-2' key={index}> 
+                <Snippet text={snip} />
+              </div>
+            ) : (
+              <div className='m-2' key={index}> 
+                <Snippet text={snip} />
+              </div>
+            )
+          );
+  })
+)}
+
 
       </Container>
     </>
