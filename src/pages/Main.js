@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { sendSnippetsToNotion } from '../Notion';
 import { StyledDropDown, Snippet } from '../components';
 import Button from 'react-bootstrap/Button'
@@ -17,10 +17,20 @@ const Main = () => {
   const [snippets, setSnippets] = useState([])
   const [title, setTitle] = useState("")
   const [validated, setValidated] = useState(false);
+  const [rootNotionFolder, setRootNotionFolder] = useState()
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
+
+    // i hate this but whatever lol
+    const rf = document.getElementById("rf").value
+    if(rf && rf !== ""){
+      setRootNotionFolder(rf)
+      //cache it
+      chrome.storage.local.set({"rootNotionFolder" : rf})
+    }
+
     if (form.checkValidity() === false) {
       event.stopPropagation();
       setValidated(true);
@@ -40,6 +50,10 @@ const Main = () => {
         setUrl(tabs[0].url)
       }
     })
+
+    chrome.storage.local.get("rootNotionFolder", (data) => {
+      setRootNotionFolder(data.rootNotionFolder)
+    })
   }, [])
 
   // when the URL changes, you need to reload snippets
@@ -54,7 +68,7 @@ const Main = () => {
   }
 
   const sendToNotionHandler = () => {
-    if(sendSnippetsToNotion(snippets, title)){
+    if(sendSnippetsToNotion(snippets, title, rootNotionFolder)){
 
       // clear snippets
       setSnippets([])
@@ -84,7 +98,7 @@ const Main = () => {
           </Col>
           <Col>
             <InputGroup>
-              <StyledDropDown />            
+              <StyledDropDown rootNotionFolder={rootNotionFolder}/>            
             </InputGroup>
           </Col>
         </Row>

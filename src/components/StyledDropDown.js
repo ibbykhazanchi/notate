@@ -3,8 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form'
+import { useState } from 'react'
 
-const StyledDropDown = () => {
+
+const StyledDropDown = ({rootNotionFolder}) => {
 
     const StyledDropDownDiv = styled.div`
         position: absolute;
@@ -16,6 +18,9 @@ const StyledDropDown = () => {
             display: none;
         }
     `
+    const handleChange = (event) => {
+        console.log(event.target.value)
+    }
     return (
         <StyledDropDownDiv>
             <Dropdown 
@@ -25,14 +30,14 @@ const StyledDropDown = () => {
                     {<FontAwesomeIcon icon={faGear} /> }
                 </StyledDropDownToggle>
                 <Dropdown.Menu>
-                    <Dropdown.ItemText href="#/action-3"> 
-                    Root Notion Folder 
                     <Form.Control 
                         required
                         type="text" 
                         placeholder="Enter Root Folder"
+                        value={rootNotionFolder}
+                        onChange={handleChange}
+                        id="rf"
                       />
-                    </Dropdown.ItemText>
                 </Dropdown.Menu>
             </Dropdown> 
       </StyledDropDownDiv>
