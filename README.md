@@ -8,7 +8,7 @@ This chrome extension allows me to:
 
 Watch this video below to get a better understanding:
 
-https://user-images.githubusercontent.com/65377513/232584269-48bfa667-239b-4671-b9ee-1f4098a35948.mov
+https://user-images.githubusercontent.com/65377513/232584647-9002b577-085f-4a99-97c3-396169228b19.mov
 
 ## Why Did I Build this?
 
