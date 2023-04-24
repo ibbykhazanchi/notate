@@ -1,2 +1,2 @@
-export { default as StyledDropDown } from './StyledDropDown'
 export { default as Snippet } from './Snippet'
+export { default as SearchableSelect } from './SearchableSelect'

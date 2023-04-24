@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { sendSnippetsToNotion } from '../Notion';
-import { Snippet } from '../components';
+import { getFolders, sendSnippetsToNotion } from '../Notion';
+import { Snippet, SearchableSelect } from '../components';
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
@@ -8,28 +8,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styled from 'styled-components/macro';
 
-
-
 const Main = () => {
 
   const [url, setUrl] = useState("")
   const [snippets, setSnippets] = useState([])
   const [title, setTitle] = useState("")
-  const [validated, setValidated] = useState(false);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
-      setValidated(true);
-    } else {
-      setValidated(false);
-      sendToNotionHandler()
-    }
-  };
-
+  const [validated, setValidated] = useState(false)
+  const [folders, setFolders] = useState([])
 
   // gets the URL
   useEffect(() => {
@@ -50,8 +35,30 @@ const Main = () => {
     })
   }, [url])
 
+  // load folders
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getFolders()
+      setFolders(data)
+    }
+    fetchData()
+  }, [])
+
   const handleChange = (event) => {
     setTitle(event.target.value)
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    const form = event.currentTarget
+
+    if (form.checkValidity() === false) {
+      event.stopPropagation()
+      setValidated(true)
+    } else {
+      setValidated(false)
+      sendToNotionHandler()
+    }
   }
 
   const sendToNotionHandler = () => {
@@ -71,41 +78,46 @@ const Main = () => {
       
       <Container>
 
-      <Form noValidate validated={validated} onSubmit={handleSubmit}>
-        <Row>
-          <Col xs={7}>
-            <Form.Control 
-              type="text" 
-              placeholder="Enter a Title"
-              value={title}
-              onChange={handleChange}
-              className='mb-2 mt-3'
-              required
-            />
-          </Col>
-        </Row>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row>
             <Col xs={7}>
-              <Button type='submit'> Send to Notion </Button>
+              <SearchableSelect options={folders} />
             </Col>
-        </Row>
-      </Form>
-      
-      {snippets && snippets.length > 0 && (
-        snippets.map((snip, index) => {
-          return (
-            index === 0 ? (
-              <div className='m-2 mt-3 mb-2 ml-2 mr-2' key={index}> 
-                <Snippet text={snip} />
-              </div>
-            ) : (
-              <div className='m-2' key={index}> 
-                <Snippet text={snip} />
-              </div>
-            )
-          );
-        })
-      )}
+          </Row>
+          <Row>
+            <Col xs={7}>
+              <Form.Control 
+                type="text" 
+                placeholder="Enter a Title"
+                value={title}
+                onChange={handleChange}
+                className='mb-2 mt-3'
+                required
+              />
+            </Col>
+          </Row>
+          <Row>
+              <Col xs={7}>
+                <Button type='submit'> Send to Notion </Button>
+              </Col>
+          </Row>
+        </Form>
+        
+        {snippets && snippets.length > 0 && (
+          snippets.map((snip, index) => {
+            return (
+              index === 0 ? (
+                <div className='m-2 mt-3 mb-2 ml-2 mr-2' key={index}> 
+                  <Snippet text={snip} />
+                </div>
+              ) : (
+                <div className='m-2' key={index}> 
+                  <Snippet text={snip} />
+                </div>
+              )
+            );
+          })
+        )}
 
       </Container>
     </>

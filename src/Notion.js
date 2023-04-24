@@ -2,6 +2,31 @@ import { Client } from '@notionhq/client'
 
 const notion = new Client({ auth: process.env.REACT_APP_NOTION_KEY });
 
+export const getFolders = async () => {
+  try {
+    const response = await notion.search({
+      filter: {
+        value: 'page',
+        property: 'object',
+      },
+      sort: {
+        direction: 'descending',
+        timestamp: 'last_edited_time'
+      },
+    });
+    const pageObjects =  response.results.map((pageObj) => {
+        return {
+          id: pageObj.id,
+          title: pageObj.properties.title.title[0].plain_text
+        }
+    })
+    return pageObjects
+  } catch(error) {
+    console.error(error)
+    return null
+  }  
+}
+
 const createNotionPage = async title => {
   console.log(title)
   
@@ -24,11 +49,8 @@ const createNotionPage = async title => {
           ],
         },
       },
-    });
-    console.log(response)
-    
+    })
     return response.id
-
   } catch(error){
     console.error(error)
     return null
@@ -42,7 +64,6 @@ export const sendSnippetsToNotion = async (snippets, title) => {
   if(!blockId){
     return
   }
-  console.log("BLCOK ID" + blockId)
 
   if(!snippets || snippets.length === 0){
       return
