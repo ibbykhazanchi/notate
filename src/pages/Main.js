@@ -15,6 +15,7 @@ const Main = () => {
   const [title, setTitle] = useState("")
   const [validated, setValidated] = useState(false)
   const [folders, setFolders] = useState([])
+  const [selectedFolder, setSelectedFolder] = useState('')
 
   // gets the URL
   useEffect(() => {
@@ -77,7 +78,7 @@ const Main = () => {
     <>
       
       <Container>
-
+        <p> {selectedFolder && selectedFolder.title}</p>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row>
             <Col xs={7}>

@@ -1,6 +1,5 @@
-import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form'
-
+import Dropdown from 'react-bootstrap/Dropdown'
 import { useEffect, useState } from 'react';
 
 const SearchableSelect = ({options}) => {
@@ -16,8 +15,9 @@ const SearchableSelect = ({options}) => {
         setFilteredOptions(filtered)
     }, [searchTerm, options])
 
-    const handleSelect = (eventKey, event) => {
-        setSearchTerm(event.target.innerText)
+    const handleSelect = (option) => {
+        console.log(option)
+        setSearchTerm(option.title)
     }
 
     const handleChange = (event) => {
@@ -36,30 +36,29 @@ const SearchableSelect = ({options}) => {
 
     return (
         <>
-        <Form.Control
-          placeholder="Select Folder"
-          value={searchTerm}
-          onChange={handleChange}
-          onClick={handleFocus}
-          onBlur={handleFocusOut}
-        />
-        {showDropDown && (
-                <Dropdown
-                onSelect={handleSelect}
-                autoClose="inside"
-            >
-                <Dropdown.Menu 
-                    onChange={handleSelect}
-                    show
-                >
-                    {filteredOptions && filteredOptions.map((option) => {
-                        return (
-                            <Dropdown.Item key={option.id}>{option.title}</Dropdown.Item>
-                        )
-                    })}
-                </Dropdown.Menu>
-            </Dropdown>
-        )}
+            <Form.Control
+            placeholder="Select Folder"
+            value={searchTerm}
+            onChange={handleChange}
+            onClick={handleFocus}
+            onBlur={handleFocusOut}
+            />
+            {showDropDown && (
+                <Dropdown autoClose="inside">
+                    <Dropdown.Menu show>
+                        {filteredOptions && filteredOptions.map((option) => {
+                            return (
+                                <Dropdown.Item 
+                                    key={option.value} 
+                                    value={option.value} 
+                                    onClick={() => handleSelect(option)}>
+                                    {option.title}
+                                </Dropdown.Item>
+                            )
+                        })}
+                    </Dropdown.Menu>
+                </Dropdown>
+            )}
         </>
     )
 }
