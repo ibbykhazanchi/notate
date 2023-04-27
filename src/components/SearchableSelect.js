@@ -2,7 +2,7 @@ import Form from 'react-bootstrap/Form'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { useEffect, useState } from 'react';
 
-const SearchableSelect = ({options}) => {
+const SearchableSelect = ({options, setFolder}) => {
 
     const [searchTerm, setSearchTerm] = useState('')
     const [filteredOptions, setFilteredOptions] = useState([])
@@ -17,6 +17,7 @@ const SearchableSelect = ({options}) => {
 
     const handleSelect = (option) => {
         console.log(option)
+        setFolder(option)
         setSearchTerm(option.title)
     }
 

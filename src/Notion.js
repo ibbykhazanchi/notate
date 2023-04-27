@@ -57,13 +57,7 @@ const createNotionPage = async title => {
   }
 }
 
-export const sendSnippetsToNotion = async (snippets, title) => {
-
-  // make a new page
-  const blockId = await createNotionPage(title)
-  if(!blockId){
-    return
-  }
+export const sendSnippetsToNotion = async (snippets, title, id) => {
 
   if(!snippets || snippets.length === 0){
       return
@@ -74,7 +68,7 @@ export const sendSnippetsToNotion = async (snippets, title) => {
 
   // send to notion
   const response = await notion.blocks.children.append({
-      block_id: blockId,
+      block_id: id,
       children: blocks
   })
 

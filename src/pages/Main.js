@@ -15,7 +15,7 @@ const Main = () => {
   const [title, setTitle] = useState("")
   const [validated, setValidated] = useState(false)
   const [folders, setFolders] = useState([])
-  const [selectedFolder, setSelectedFolder] = useState('')
+  const [selectedFolder, setSelectedFolder] = useState(null)
 
   // gets the URL
   useEffect(() => {
@@ -49,6 +49,10 @@ const Main = () => {
     setTitle(event.target.value)
   }
 
+  const setFolder = (obj) => {
+    setSelectedFolder(obj)
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
     const form = event.currentTarget
@@ -63,7 +67,7 @@ const Main = () => {
   }
 
   const sendToNotionHandler = () => {
-    if(sendSnippetsToNotion(snippets, title)){
+    if(sendSnippetsToNotion(snippets, title, selectedFolder.id)){
 
       // clear snippets
       setSnippets([])
@@ -78,11 +82,10 @@ const Main = () => {
     <>
       
       <Container>
-        <p> {selectedFolder && selectedFolder.title}</p>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row>
             <Col xs={7}>
-              <SearchableSelect options={folders} />
+              <SearchableSelect options={folders} setFolder={setFolder}/>
             </Col>
           </Row>
           <Row>
