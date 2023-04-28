@@ -27,14 +27,14 @@ export const getFolders = async () => {
   }  
 }
 
-const createNotionPage = async title => {
+const createNotionPage = async (title, parentId) => {
   console.log(title)
   
   try {
     const response = await notion.pages.create({
       parent: {
         type: 'page_id',
-        page_id: '12b4379e-521e-41df-8e7e-83429a22c0a7',
+        page_id: parentId,
       },
       properties: {
         title: {
@@ -57,7 +57,7 @@ const createNotionPage = async title => {
   }
 }
 
-export const sendSnippetsToNotion = async (snippets, title, id) => {
+export const sendSnippetsToNotion = async (snippets, title, id, createPage) => {
 
   if(!snippets || snippets.length === 0){
       return
@@ -66,9 +66,18 @@ export const sendSnippetsToNotion = async (snippets, title, id) => {
   // map the snippet array to a list of blocks
   const blocks = mapSnippetsToBlocks(snippets)
 
+  // variable that will hold the parent page
+  let parentPageId = id
+
+  // if user wants to create a page, do that
+  if(createPage){
+    const newPageId = await createNotionPage(title, id)
+    parentPageId = newPageId
+  }
+
   // send to notion
   const response = await notion.blocks.children.append({
-      block_id: id,
+      block_id: parentPageId,
       children: blocks
   })
 

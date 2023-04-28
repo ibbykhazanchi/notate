@@ -16,7 +16,6 @@ const SearchableSelect = ({options, setFolder}) => {
     }, [searchTerm, options])
 
     const handleSelect = (option) => {
-        console.log(option)
         setFolder(option)
         setSearchTerm(option.title)
     }
@@ -37,30 +36,32 @@ const SearchableSelect = ({options, setFolder}) => {
 
     return (
         <>
-            <Form.Label> Page </Form.Label>
-            <Form.Control
-            placeholder="Select a Page"
-            value={searchTerm}
-            onChange={handleChange}
-            onClick={handleFocus}
-            onBlur={handleFocusOut}
-            />
-            {showDropDown && (
-                <Dropdown autoClose="inside">
-                    <Dropdown.Menu show>
-                        {filteredOptions && filteredOptions.map((option) => {
-                            return (
-                                <Dropdown.Item 
-                                    key={option.value} 
-                                    value={option.value} 
-                                    onClick={() => handleSelect(option)}>
-                                    {option.title}
-                                </Dropdown.Item>
-                            )
-                        })}
-                    </Dropdown.Menu>
-                </Dropdown>
-            )}
+            <Form.Group>
+                <Form.Label> Page </Form.Label>
+                <Form.Control
+                placeholder="Select a Page"
+                value={searchTerm}
+                onChange={handleChange}
+                onClick={handleFocus}
+                onBlur={handleFocusOut}
+                />
+                {showDropDown && (
+                    <Dropdown autoClose="inside">
+                        <Dropdown.Menu show>
+                            {filteredOptions && filteredOptions.map((option) => {
+                                return (
+                                    <Dropdown.Item 
+                                        key={option.value} 
+                                        value={option.value} 
+                                        onClick={() => handleSelect(option)}>
+                                        {option.title}
+                                    </Dropdown.Item>
+                                )
+                            })}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                )}
+            </Form.Group>
         </>
     )
 }

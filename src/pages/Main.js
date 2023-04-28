@@ -70,7 +70,7 @@ const Main = () => {
   }
 
   const sendToNotionHandler = () => {
-    if(sendSnippetsToNotion(snippets, title, selectedFolder.id)){
+    if(sendSnippetsToNotion(snippets, title, selectedFolder.id, createNewPage)){
 
       // clear snippets
       setSnippets([])
@@ -90,62 +90,54 @@ const Main = () => {
 
     &:hover,
     &:focus {
-      background-color: white; /* Change this to the desired color */
+      background-color: white;
       color: black;
     }
 
-    
   `;
 
   return (
     <>
       
       <Container>
-      <Dropdown id="dropdown-basic-button" autoClose="outside" className='mt-3'>
-        <Dropdown.Toggle id="dropdown-autoclose-outside">
-          Clip
-        </Dropdown.Toggle>
-        <Dropdown.Menu className='w-100'>
-        <StyledDropdownItem href="#/action-1">
-          <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Row className='mb-2'>
-              <Col xs={7}>
-                <Form.Group>
-                  <SearchableSelect options={folders} setFolder={setFolder}/>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
+          <Dropdown id="dropdown-basic-button" autoClose="outside" className='mt-3'>
+          <Dropdown.Toggle id="dropdown-autoclose-outside">
+            Clip
+          </Dropdown.Toggle>
+          <Dropdown.Menu className='w-100'>
+          <Dropdown.Item href="#/action-1">
+            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+              <Row className='mb-2'>
                 <Col xs={7}>
-                <Form.Switch id="custom-switch" label = "Embed new Page"  onChange ={handleCreateNewPageChange} checked={createNewPage}/>
+                  <SearchableSelect options={folders} setFolder={setFolder}/>
                 </Col>
-                {createNewPage && (
+              </Row>
+              <Row>
                   <Col xs={7}>
-                    <Form.Group>
+                  <Form.Switch id="custom-switch" label = "Embed new Page"  onChange ={handleCreateNewPageChange} checked={createNewPage}/>
+                  </Col>
+                  {createNewPage && (
+                    <Col xs={7}>
                       <Form.Control 
-                      type="text" 
                       placeholder="Enter a Page Title"
                       value={title}
                       onChange={handleChange}
                       className='mb-2'
                       required
-                      // disabled = {!createNewPage}
                       />
-                    </Form.Group>
+                    </Col>
+                  )}
+              </Row>
+              <Row>
+                  <Col xs={7}>
+                    <Button type='submit'> Send to Notion </Button>
                   </Col>
-                )}
-            </Row>
-            <Row>
-                <Col xs={7}>
-                  <Button type='submit'> Send to Notion </Button>
-                </Col>
-            </Row>
-          </Form>
-        </StyledDropdownItem>
-        </Dropdown.Menu>
-      </Dropdown>
+              </Row>
+            </Form>
+          </Dropdown.Item>
+          </Dropdown.Menu>
+          </Dropdown>
 
-        
         {snippets && snippets.length > 0 && (
           snippets.map((snip, index) => {
             return (
@@ -161,6 +153,7 @@ const Main = () => {
             );
           })
         )}
+        
 
       </Container>
     </>
