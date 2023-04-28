@@ -37,8 +37,9 @@ const SearchableSelect = ({options, setFolder}) => {
 
     return (
         <>
+            <Form.Label> Page </Form.Label>
             <Form.Control
-            placeholder="Select Folder"
+            placeholder="Select a Page"
             value={searchTerm}
             onChange={handleChange}
             onClick={handleFocus}

@@ -7,6 +7,8 @@ import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styled from 'styled-components/macro';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 const Main = () => {
 
@@ -16,6 +18,7 @@ const Main = () => {
   const [validated, setValidated] = useState(false)
   const [folders, setFolders] = useState([])
   const [selectedFolder, setSelectedFolder] = useState(null)
+  const [createNewPage, setCreateNewPage] = useState(false)
 
   // gets the URL
   useEffect(() => {
@@ -78,34 +81,70 @@ const Main = () => {
     }
   }
 
+  const handleCreateNewPageChange = () => {
+    setCreateNewPage(!createNewPage)
+    return true
+  }
+
+  const StyledDropdownItem = styled(Dropdown.Item)`
+
+    &:hover,
+    &:focus {
+      background-color: white; /* Change this to the desired color */
+      color: black;
+    }
+
+    
+  `;
+
   return (
     <>
       
       <Container>
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          <Row>
-            <Col xs={7}>
-              <SearchableSelect options={folders} setFolder={setFolder}/>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={7}>
-              <Form.Control 
-                type="text" 
-                placeholder="Enter a Title"
-                value={title}
-                onChange={handleChange}
-                className='mb-2 mt-3'
-                required
-              />
-            </Col>
-          </Row>
-          <Row>
+      <Dropdown id="dropdown-basic-button" autoClose="outside" className='mt-3'>
+        <Dropdown.Toggle id="dropdown-autoclose-outside">
+          Clip
+        </Dropdown.Toggle>
+        <Dropdown.Menu className='w-100'>
+        <StyledDropdownItem href="#/action-1">
+          <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Row className='mb-2'>
               <Col xs={7}>
-                <Button type='submit'> Send to Notion </Button>
+                <Form.Group>
+                  <SearchableSelect options={folders} setFolder={setFolder}/>
+                </Form.Group>
               </Col>
-          </Row>
-        </Form>
+            </Row>
+            <Row>
+                <Col xs={7}>
+                <Form.Switch id="custom-switch" label = "Embed new Page"  onChange ={handleCreateNewPageChange} checked={createNewPage}/>
+                </Col>
+                {createNewPage && (
+                  <Col xs={7}>
+                    <Form.Group>
+                      <Form.Control 
+                      type="text" 
+                      placeholder="Enter a Page Title"
+                      value={title}
+                      onChange={handleChange}
+                      className='mb-2'
+                      required
+                      // disabled = {!createNewPage}
+                      />
+                    </Form.Group>
+                  </Col>
+                )}
+            </Row>
+            <Row>
+                <Col xs={7}>
+                  <Button type='submit'> Send to Notion </Button>
+                </Col>
+            </Row>
+          </Form>
+        </StyledDropdownItem>
+        </Dropdown.Menu>
+      </Dropdown>
+
         
         {snippets && snippets.length > 0 && (
           snippets.map((snip, index) => {
