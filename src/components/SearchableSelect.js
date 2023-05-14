@@ -47,7 +47,7 @@ const SearchableSelect = ({options, setFolder}) => {
                 />
                 {showDropDown && (
                     <Dropdown autoClose="inside">
-                        <Dropdown.Menu show>
+                        <Dropdown.Menu show style={{maxHeight: '250px', overflowY:'scroll'}}>
                             {filteredOptions && filteredOptions.map((option) => {
                                 return (
                                     <Dropdown.Item 

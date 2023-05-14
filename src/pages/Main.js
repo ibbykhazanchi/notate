@@ -114,7 +114,7 @@ const Main = () => {
               </Row>
               <Row>
                   <Col xs={7}>
-                  <Form.Switch id="custom-switch" label = "Embed new Page"  onChange ={handleCreateNewPageChange} checked={createNewPage}/>
+                  <Form.Switch id="custom-switch" label = "Create a New Page"  onChange ={handleCreateNewPageChange} checked={createNewPage}/>
                   </Col>
                   {createNewPage && (
                     <Col xs={7}>
