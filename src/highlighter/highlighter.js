@@ -1,4 +1,4 @@
-const highlightColor = "rgb(213, 234, 255)";
+const highlightColor = "rgb(255, 252, 213)";
 
 const template = `
   <template id="highlightTemplate">
@@ -83,8 +83,6 @@ class MediumHighlighter extends HTMLElement {
     
     // set the url 
     const currentUrl = window.location.href
-
-    // chrome.storage.local.remove(currentUrl, () => {console.log("removedKey")})
 
     // set the snippet to the array
     chrome.storage.local.get(currentUrl, (data) => {
