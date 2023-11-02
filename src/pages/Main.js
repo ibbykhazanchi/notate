@@ -6,9 +6,7 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import styled from "styled-components/macro";
 import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
 
 const Main = () => {
   const [url, setUrl] = useState("");
@@ -90,15 +88,15 @@ const Main = () => {
       chrome.storage.local.remove(url);
 
       // remove highlights from html
-      removeHighlights()
+      removeHighlights();
     }
   };
 
   const removeHighlights = () => {
-    chrome.tabs.query({active: true}, (tabs) => {  		  
-      chrome.tabs.sendMessage(tabs[0].id, {action:"remove-highlights"})
+    chrome.tabs.query({ active: true }, (tabs) => {
+      chrome.tabs.sendMessage(tabs[0].id, { action: "remove-highlights" });
     });
-  }
+  };
 
   const handleCreateNewPageChange = () => {
     setCreateNewPage(!createNewPage);
