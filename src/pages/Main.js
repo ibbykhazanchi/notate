@@ -108,8 +108,8 @@ const Main = () => {
       <Container>
         <Accordion className="m-2">
           <Accordion.Item eventKey="0">
-              <Accordion.Body>
-                <p> Put stuff here</p>
+            <Accordion.Body>
+              <p> Put stuff here</p>
             </Accordion.Body>
             <Accordion.Header> Configure your Clips </Accordion.Header>
           </Accordion.Item>
