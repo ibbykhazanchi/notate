@@ -6,7 +6,7 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Dropdown from "react-bootstrap/Dropdown";
+import Accordion from "react-bootstrap/Accordion";
 
 const Main = () => {
   const [url, setUrl] = useState("");
@@ -106,52 +106,14 @@ const Main = () => {
   return (
     <>
       <Container>
-        <Dropdown
-          id="dropdown-basic-button"
-          autoClose="outside"
-          className="mt-3"
-        >
-          <Dropdown.Toggle id="dropdown-autoclose-outside">
-            Clip
-          </Dropdown.Toggle>
-          <Dropdown.Menu className="w-100">
-            <Dropdown.Item href="#/action-1">
-              <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                <Row className="mb-2">
-                  <Col xs={7}>
-                    <SearchableSelect options={folders} setFolder={setFolder} />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={7}>
-                    <Form.Switch
-                      id="custom-switch"
-                      label="Create a New Page"
-                      onChange={handleCreateNewPageChange}
-                      checked={createNewPage}
-                    />
-                  </Col>
-                  {createNewPage && (
-                    <Col xs={7}>
-                      <Form.Control
-                        placeholder="Enter a Page Title"
-                        value={title}
-                        onChange={handleChange}
-                        className="mb-2"
-                        required
-                      />
-                    </Col>
-                  )}
-                </Row>
-                <Row>
-                  <Col xs={7}>
-                    <Button type="submit"> Send to Notion </Button>
-                  </Col>
-                </Row>
-              </Form>
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+        <Accordion className="m-2">
+          <Accordion.Item eventKey="0">
+              <Accordion.Body>
+                <p> Put stuff here</p>
+            </Accordion.Body>
+            <Accordion.Header> Configure your Clips </Accordion.Header>
+          </Accordion.Item>
+        </Accordion>
 
         {snippets &&
           snippets.length > 0 &&
