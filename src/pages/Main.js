@@ -106,12 +106,16 @@ const Main = () => {
   return (
     <>
       <Container>
-        <Accordion className="m-2">
+
+        <Accordion>
           <Accordion.Item eventKey="0">
             <Accordion.Body>
-              <p> Put stuff here</p>
+              <SearchableSelect options={folders} setFolder={setFolder} />
             </Accordion.Body>
-            <Accordion.Header> Configure your Clips </Accordion.Header>
+            <Accordion.Header>
+              {(selectedFolder && selectedFolder.title + " /") ||
+                "Select a Page"}
+            </Accordion.Header>
           </Accordion.Item>
         </Accordion>
 
@@ -119,7 +123,7 @@ const Main = () => {
           snippets.length > 0 &&
           snippets.map((snip, index) => {
             return index === 0 ? (
-              <div className="m-2 mt-3 mb-2 ml-2 mr-2" key={index}>
+              <div className="m-2 mt-3" key={index}>
                 <Snippet text={snip} />
               </div>
             ) : (
