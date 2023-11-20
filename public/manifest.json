@@ -1,6 +1,6 @@
 {
-  "name": "HiLite",
-  "description": "Highlight text & Save it to Notion",
+  "name": "Snip.it",
+  "description": "Snip some text & Save it to Notion",
   "version": "1.0",
   "manifest_version": 3,
   "action": {
