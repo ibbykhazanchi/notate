@@ -6,14 +6,14 @@
 }
 
 .menu-bars {
-    margin-left: 1rem;
+    margin-left: 0rem;
     font-size: 1rem;
     background: none;
 }
 
 .nav-menu {
     background-color: #060b26;
-    width: 250px;
+    width: 150px;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -32,8 +32,7 @@
 .nav-text {
     display: flex;
     justify-content: start;
-    align-items: center;
-    padding: 8px 0px 8px 16px;
+    padding: 4px 0px 0px 0px;
     list-style: none;
     height: 60px;
 }
@@ -46,7 +45,7 @@
     height: 100%;
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 4px;
     border-radius: 4px;
 }
 
@@ -56,6 +55,7 @@
 
 .nav-menu-items {
     width: 100%;
+    margin-left: 0;
 }
 
 .navbar-toggle {
@@ -64,9 +64,12 @@
     height: 80px;
     display: flex;
     justify-content: start;
-    align-items: center;
 }
 
 span {
-    margin-left: 16px;
+    margin-left: 4px
+}
+
+ul#bootstrap-override{
+    padding-left: 0rem;
 }

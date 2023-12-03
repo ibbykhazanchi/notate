@@ -110,7 +110,7 @@ const Main = () => {
         <Accordion>
           <Accordion.Item eventKey="0">
             <Accordion.Body>
-              <SearchableSelect options={folders} setFolder={setFolder} />
+              <SearchableSelect options={folders || []} setFolder={setFolder} />
             </Accordion.Body>
             <Accordion.Header>
               {(selectedFolder && selectedFolder.title + " /") ||

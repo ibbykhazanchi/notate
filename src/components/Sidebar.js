@@ -18,13 +18,13 @@ function Sidebar() {
         </Link>
       </div>
       <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
-        <ul className="nav-menu-items">
+        <ul className="nav-menu-items" id="bootstrap-override">
           <li className="navbar-toggle">
             <Link to="#" className="menu-bars">
               <AiOutlineClose onClick={showSidebar} />
             </Link>
           </li> 
-          {SidebarData.map((item, index) => {
+          {/* {SidebarData.map((item, index) => {
             return(
               <li key = {index} className={item.cName}>
                 <Link to={item.path}>
@@ -33,7 +33,7 @@ function Sidebar() {
                 </Link>
               </li>
             )
-          })}
+          })} */}
         </ul>
       </nav>
     </div>
