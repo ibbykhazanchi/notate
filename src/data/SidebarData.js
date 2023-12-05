@@ -1,7 +1,6 @@
 import React from 'react'
-import { FaCartPlus, FaEnvelopeOpenText } from "react-icons/fa";
-import { AiFillHome } from "react-icons/ai";
-import * as IoIcons from "react-icons/io"
+import { FaToolbox } from "react-icons/fa";
+import { AiFillHome, AiFillSetting } from "react-icons/ai";
 
 export const SidebarData = [
     {
@@ -11,27 +10,15 @@ export const SidebarData = [
         cName: 'nav-text'
     },
     {
-        title: "Reports",
+        title: "Configure",
         path: '/reports',
-        icon: <IoIcons.IoIosPaper />,
+        icon: <FaToolbox />,
         cName: 'nav-text'
     },
     {
-        title: "Products",
+        title: "Settings",
         path: '/products',
-        icon: <FaCartPlus />,
+        icon: <AiFillSetting />,
         cName: 'nav-text'
     },
-    {
-        title: "Team",
-        path: '/team',
-        icon: <IoIcons.IoMdPeople />,
-        cName: 'nav-text'
-    },
-    {
-        title: "Messages",
-        path: '/messages',
-        icon: <FaEnvelopeOpenText />,
-        cName: 'nav-text'
-    }
 ]

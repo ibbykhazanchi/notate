@@ -24,7 +24,7 @@ function Sidebar() {
               <AiOutlineClose onClick={showSidebar} />
             </Link>
           </li> 
-          {/* {SidebarData.map((item, index) => {
+          {SidebarData.map((item, index) => {
             return(
               <li key = {index} className={item.cName}>
                 <Link to={item.path}>
@@ -33,7 +33,7 @@ function Sidebar() {
                 </Link>
               </li>
             )
-          })} */}
+          })}
         </ul>
       </nav>
     </div>
