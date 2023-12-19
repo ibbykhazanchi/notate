@@ -131,7 +131,7 @@ const Main = () => {
             );
           })}
             
-          <div className="fixed-bottom text-center mb-3">
+          <div className="fixed-bottom text-center mb-3" style={{zIndex:2}}>
             <Button variant="primary" ref={target} onClick={handleSubmit} id="shipButton"> Send to Notion 🚀 </Button>
             <Overlay target={target.current} show={showAlert} placement="top">
             {(props) => (
