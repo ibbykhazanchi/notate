@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaToolbox } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import { AiFillHome, AiFillSetting } from "react-icons/ai";
 
 export const SidebarData = [
@@ -12,13 +12,13 @@ export const SidebarData = [
     {
         title: "Configure",
         path: '/reports',
-        icon: <FaToolbox />,
+        icon: <AiFillSetting />,
         cName: 'nav-text'
     },
     {
-        title: "Settings",
+        title: "Account",
         path: '/products',
-        icon: <AiFillSetting />,
+        icon: <FaUser />,
         cName: 'nav-text'
     },
 ]

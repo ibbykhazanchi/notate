@@ -1,6 +1,6 @@
 html, body {
   width: 400px;
-  height: 600px;
+  height: 400px;
   /* margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -8,6 +8,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
   z-index: 1;
+  overflow-y: auto;
 }
 
 code {

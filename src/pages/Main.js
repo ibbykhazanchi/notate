@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getFolders, sendSnippetsToNotion } from "../Notion";
 import { Snippet, SearchableSelect } from "../components";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import Overlay from 'react-bootstrap/Overlay';
+import Tooltip from 'react-bootstrap/Tooltip';
 import Accordion from "react-bootstrap/Accordion";
+import 'animate.css'
 
 const Main = () => {
   const [url, setUrl] = useState("");
   const [snippets, setSnippets] = useState([]);
   const [title, setTitle] = useState("");
-  const [validated, setValidated] = useState(false);
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
-  const [createNewPage, setCreateNewPage] = useState(false);
+  const target = useRef(null);
+  const [showAlert, setShowAlert] = useState(false);
+
 
   // gets the URL
   useEffect(() => {
@@ -63,22 +64,24 @@ const Main = () => {
     setSelectedFolder(obj);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
-      setValidated(true);
+  const handleSubmit = () => {
+    if (!selectedFolder) {
+      //shake & trigger a popup
+      setShowAlert(true)
+      const element = document.getElementById('shipButton')
+      element.classList.add('animate__animated', 'animate__headShake');
+      setTimeout(() => {
+        setShowAlert(false);
+        element.classList.remove('animate__animated', 'animate__headShake')
+      }, 7000)
     } else {
-      setValidated(false);
       sendToNotionHandler();
     }
   };
 
   const sendToNotionHandler = () => {
     if (
-      sendSnippetsToNotion(snippets, title, selectedFolder.id, createNewPage)
+      sendSnippetsToNotion(snippets, title, selectedFolder.id)
     ) {
       // clear snippets
       setSnippets([]);
@@ -96,11 +99,6 @@ const Main = () => {
     chrome.tabs.query({ active: true }, (tabs) => {
       chrome.tabs.sendMessage(tabs[0].id, { action: "remove-highlights" });
     });
-  };
-
-  const handleCreateNewPageChange = () => {
-    setCreateNewPage(!createNewPage);
-    return true;
   };
 
   return (
@@ -132,6 +130,18 @@ const Main = () => {
               </div>
             );
           })}
+            
+          <div className="fixed-bottom text-center mb-3">
+            <Button variant="primary" ref={target} onClick={handleSubmit} id="shipButton"> Send to Notion 🚀 </Button>
+            <Overlay target={target.current} show={showAlert} placement="top">
+            {(props) => (
+              <Tooltip id="overlay-example" {...props}>
+                you must provide a valid notion folder
+              </Tooltip>
+            )}
+          </Overlay>
+          </div>
+
       </Container>
     </>
   );
