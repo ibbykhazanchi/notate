@@ -118,17 +118,20 @@ const Main = () => {
         </Accordion>
 
         {snippets &&
-          snippets.length > 0 &&
           snippets.map((snip, index) => {
-            return index === 0 ? (
-              <div className="m-2 mt-3" key={index}>
+            if(index === 0){
+              return <div className="m-2 mt-3" key={index}>
+                <Snippet text={snip} />
+              </div>        
+            } else if(index === snippets.length - 1) {
+              return <div id="lastSnippet" key={index}>
                 <Snippet text={snip} />
               </div>
-            ) : (
-              <div className="m-2" key={index}>
+            } else {
+              return <div className="m-2" key={index}>
                 <Snippet text={snip} />
               </div>
-            );
+            }
           })}
             
           <div className="fixed-bottom text-center mb-3" style={{zIndex:2}}>

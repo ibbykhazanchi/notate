@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Login, Main } from './pages'
+import { Login, Main, Account } from './pages'
 import { GlobalStyle } from "./styles";
 import { Sidebar } from "./components"
 import { MemoryRouter as Router, Routes, Route} from "react-router-dom"
@@ -21,6 +21,7 @@ const App = () => {
           <Sidebar />
           <Routes>
             <Route path='/' element={<></>} />
+            <Route path='account' element={<Account />} />
             <Route index element={<Main />} />
           </Routes>
         </Router>

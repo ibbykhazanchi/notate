@@ -11,13 +11,13 @@ export const SidebarData = [
     },
     {
         title: "Configure",
-        path: '/reports',
+        path: '/configure',
         icon: <AiFillSetting />,
         cName: 'nav-text'
     },
     {
         title: "Account",
-        path: '/products',
+        path: '/account',
         icon: <FaUser />,
         cName: 'nav-text'
     },
