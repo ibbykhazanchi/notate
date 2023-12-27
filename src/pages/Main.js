@@ -34,7 +34,6 @@ const Main = () => {
     // remove highlights
     if (snippets && snippets.length === 0) {
       window.document.querySelectorAll(".highlight").forEach((e) => {
-        console.log(e);
         e.style.backgroundColor = null;
       });
     }
@@ -81,7 +80,7 @@ const Main = () => {
 
   const sendToNotionHandler = () => {
     if (
-      sendSnippetsToNotion(snippets, title, selectedFolder.id)
+      sendSnippetsToNotion(snippets, selectedFolder.id)
     ) {
       // clear snippets
       setSnippets([]);

@@ -1,10 +1,21 @@
 import { Client } from "@notionhq/client";
 import { Buffer } from "buffer";
 
-const notion = new Client({ auth: process.env.REACT_APP_NOTION_KEY });
+const getClient = async () => {
+  const response = await chrome.storage.session.get(["accessToken"])
+  const accessToken = response.accessToken;
+  if(accessToken){
+    const notion = new Client({ auth: accessToken});
+    return notion
+  }
+  return null
+}
 
 export const getFolders = async () => {
   try {
+    const notion = await getClient()
+    if(!notion) return
+
     const response = await notion.search({
       filter: {
         value: "page",
@@ -15,12 +26,15 @@ export const getFolders = async () => {
         timestamp: "last_edited_time",
       },
     });
-    const pageObjects = response.results.map((pageObj) => {
-      return {
-        id: pageObj.id,
-        title: pageObj.properties.title.title[0].plain_text,
-      };
-    });
+    const pageObjects = []
+    for(const pageObj of response.results) {
+      if(pageObj.properties.title && pageObj.properties.title.title[0]){
+        pageObjects.push({
+          id: pageObj.id,
+          title: pageObj.properties.title.title[0].plain_text,
+        });
+      }
+    };
     return pageObjects;
   } catch (error) {
     console.error(error);
@@ -29,9 +43,9 @@ export const getFolders = async () => {
 };
 
 const createNotionPage = async (title, parentId) => {
-  console.log(title);
-
   try {
+    const notion = getClient()
+    if(!notion) return 
     const response = await notion.pages.create({
       parent: {
         type: "page_id",
@@ -58,22 +72,18 @@ const createNotionPage = async (title, parentId) => {
   }
 };
 
-export const sendSnippetsToNotion = async (snippets, title, id, createPage) => {
+export const sendSnippetsToNotion = async (snippets, id) => {
   if (!snippets || snippets.length === 0) {
     return;
   }
-
   // map the snippet array to a list of blocks
   const blocks = mapSnippetsToBlocks(snippets);
 
   // variable that will hold the parent page
   let parentPageId = id;
 
-  // if user wants to create a page, do that
-  if (createPage) {
-    const newPageId = await createNotionPage(title, id);
-    parentPageId = newPageId;
-  }
+  const notion = await getClient()
+  if(!notion) return
 
   // send to notion
   const response = await notion.blocks.children.append({
@@ -131,7 +141,8 @@ export const getAccessToken = async (code) => {
   });
 
   const data = await response.json()
-  const {access_token, bot_id} = data
+  const {access_token, bot_id, owner} = data
+  console.log(owner)
   chrome.storage.local.set({"botId": bot_id})
   chrome.storage.session.set({"accessToken": access_token})
 
