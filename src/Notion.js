@@ -1,4 +1,5 @@
 import { Client } from "@notionhq/client";
+import { Buffer } from "buffer";
 
 const notion = new Client({ auth: process.env.REACT_APP_NOTION_KEY });
 
@@ -107,3 +108,32 @@ const mapSnippetsToBlocks = (snippets) => {
   });
   return blocks;
 };
+
+export const getAccessToken = async (code) => {
+  const clientId = process.env.REACT_APP_CLIENT_ID
+  const clientSecret = process.env.REACT_APP_CLIENT_SECRET
+  const redirectURL = process.env.REACT_APP_REDIRECT_URL
+
+  const encoded = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+
+  const response = await fetch("https://api.notion.com/v1/oauth/token", {
+    method: "POST",
+    headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    Authorization: `Basic ${encoded}`,
+  },
+    body: JSON.stringify({
+      grant_type: "authorization_code",
+      code: code,
+      redirect_uri: redirectURL,
+    }),
+  });
+
+  const data = await response.json()
+  const {access_token, bot_id} = data
+  chrome.storage.local.set({"botId": bot_id})
+  chrome.storage.session.set({"accessToken": access_token})
+
+  return access_token
+}
