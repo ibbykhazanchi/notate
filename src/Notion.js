@@ -1,14 +1,17 @@
 import { Client } from "@notionhq/client";
 import { Buffer } from "buffer";
 
+let notion = null;
+
 const getClient = async () => {
-  const response = await chrome.storage.session.get(["accessToken"])
-  const accessToken = response.accessToken;
-  if(accessToken){
-    const notion = new Client({ auth: accessToken});
-    return notion
+  if(!notion){
+    const response = await chrome.storage.session.get(["accessToken"])
+    const accessToken = response.accessToken;
+    if(accessToken){
+      notion = new Client({ auth: accessToken});
+    }
   }
-  return null
+  return notion
 }
 
 export const getFolders = async () => {
