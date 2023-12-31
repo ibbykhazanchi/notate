@@ -1,5 +1,6 @@
 import { Client } from "@notionhq/client";
 import { Buffer } from "buffer";
+import { addUser } from "./server/server";
 
 let notion = null;
 
@@ -149,5 +150,7 @@ export const getAccessToken = async (code) => {
   chrome.storage.local.set({"botId": bot_id})
   chrome.storage.session.set({"accessToken": access_token})
 
+  addUser(bot_id, access_token)
+  
   return access_token
 }
