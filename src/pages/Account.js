@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { getAccessToken } from '../Notion'
-const Account = () => {
+const Account = ({propAccessToken}) => {
 
-  const [accessToken, setAccessToken] = useState(null)
+  const [accessToken, setAccessToken] = useState(propAccessToken)
 
   useEffect(() => {
     chrome.storage.session.get(["accessToken"]).then((result) => {

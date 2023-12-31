@@ -8,7 +8,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Accordion from "react-bootstrap/Accordion";
 import 'animate.css'
 
-const Main = () => {
+const Main = ({accessToken}) => {
   const [url, setUrl] = useState("");
   const [snippets, setSnippets] = useState([]);
   const [title, setTitle] = useState("");
@@ -17,8 +17,6 @@ const Main = () => {
   const target = useRef(null);
   const [showAlert, setShowAlert] = useState(false);
 
-
-  // gets the URL
   useEffect(() => {
     const queryInfo = { active: true, lastFocusedWindow: true };
 
