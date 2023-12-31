@@ -1,33 +1,35 @@
 import { useState, useEffect } from "react";
-import { Login, Main, Account } from "./pages";
+import { Main, Account } from "./pages";
 import { GlobalStyle } from "./styles";
 import { Sidebar } from "./components";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 import { getUser } from "./server/server";
+import { CHROME_STORAGE_BOT_ID_KEY, CHROME_STORAGE_ACCESS_TOKEN_KEY } from "./model";
 
 const App = () => {
-  const [accessToken, setAccessToken] = useState(null);
   const [botId, setBotId] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
 
-  const handleUserChange = (accessToken, botId) => {
-    setAccessToken(accessToken);
+  const emitUserChange = (botId, accessToken) => {
     setBotId(botId);
+    setAccessToken(accessToken);
   };
 
   // gets the URL
   useEffect(() => {
     // try to load the user
-    chrome.storage.local.get(["botId"]).then((result) => {
+    chrome.storage.local.get([CHROME_STORAGE_BOT_ID_KEY]).then((result) => {
       async function loadUser() {
         if (!result.botId) return;
         const user = await getUser(result.botId);
+        if(!user) return;
 
-        const { accessToken, _id } = user;
-        setAccessToken(accessToken);
+        const { _id, accessToken } = user;
         setBotId(_id);
+        setAccessToken(accessToken);
 
-        chrome.storage.session.set({ accessToken: accessToken });
-        chrome.storage.local.set({ botId: _id });
+        chrome.storage.local.set({[CHROME_STORAGE_BOT_ID_KEY]: _id });
+        chrome.storage.session.set({[CHROME_STORAGE_ACCESS_TOKEN_KEY]: accessToken });
       }
       loadUser();
     });
@@ -44,9 +46,9 @@ const App = () => {
             path="account"
             element={
               <Account
-                propAccessToken={accessToken}
                 propBotId={botId}
-                handleUserChange={handleUserChange}
+                propAccessToken={accessToken}
+                emitUserChange={emitUserChange}
               />
             }
           />

@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { getAccessToken } from '../Notion'
-const Account = ({propAccessToken, propBotId, handleUserChange}) => {
+import { CHROME_STORAGE_BOT_ID_KEY, CHROME_STORAGE_ACCESS_TOKEN_KEY } from "../model";
 
-  const [accessToken, setAccessToken] = useState(propAccessToken)
+const Account = ({propBotId, propAccessToken, emitUserChange}) => {
+
   const [botId, setBotId] = useState(propBotId)
+  const [accessToken, setAccessToken] = useState(propAccessToken)
 
   const authenticate = () => {
     chrome.identity.launchWebAuthFlow({
@@ -19,28 +21,34 @@ const Account = ({propAccessToken, propBotId, handleUserChange}) => {
       setBotId(bot_id)
       setAccessToken(access_token)
 
-      handleUserChange(access_token, bot_id)
+      emitUserChange(bot_id, access_token)
     });
   }
 
   const signOut = () => {
-    chrome.storage.session.remove("accessToken")
-    chrome.storage.local.remove("botId")
+    chrome.storage.local.remove([CHROME_STORAGE_BOT_ID_KEY])
+    chrome.storage.session.remove([CHROME_STORAGE_ACCESS_TOKEN_KEY])
 
-    setAccessToken(null)
-    setBotId(null)
-
-    handleUserChange(null, null)
+    wipeState()
   }
 
   const clearData = () => {
     chrome.storage.session.clear()
     chrome.storage.local.clear()
+
+    wipeState()
+  }
+
+  const wipeState = () => {
+    setAccessToken(null)
+    setBotId(null)
+
+    emitUserChange(null, null)
   }
 
   return (
     <>
-    {!accessToken ? (
+    {(!accessToken && !botId) ? (
       <Button onClick={authenticate}> 
         Sign into Notion
       </Button>

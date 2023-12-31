@@ -1,6 +1,7 @@
 import { Client } from "@notionhq/client";
 import { Buffer } from "buffer";
 import { addUser } from "./server/server";
+import { CHROME_STORAGE_BOT_ID_KEY, CHROME_STORAGE_ACCESS_TOKEN_KEY } from "./model";
 
 let notion = null;
 
@@ -145,12 +146,12 @@ export const getAccessToken = async (code) => {
   });
 
   const data = await response.json()
-  const {access_token, bot_id, owner} = data
-  chrome.storage.local.set({"botId": bot_id})
-  chrome.storage.session.set({"accessToken": access_token})
+  const {bot_id, access_token, owner} = data
+
+  chrome.storage.local.set({[CHROME_STORAGE_BOT_ID_KEY]: bot_id})
+  chrome.storage.session.set({[CHROME_STORAGE_ACCESS_TOKEN_KEY]: access_token})
 
   addUser(bot_id, access_token)
   
-  const obj = {bot_id: bot_id, access_token: access_token}
-  return obj
+  return {bot_id: bot_id, access_token: access_token}
 }
