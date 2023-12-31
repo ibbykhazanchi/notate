@@ -146,11 +146,11 @@ export const getAccessToken = async (code) => {
 
   const data = await response.json()
   const {access_token, bot_id, owner} = data
-  console.log(owner)
   chrome.storage.local.set({"botId": bot_id})
   chrome.storage.session.set({"accessToken": access_token})
 
   addUser(bot_id, access_token)
   
-  return access_token
+  const obj = {bot_id: bot_id, access_token: access_token}
+  return obj
 }

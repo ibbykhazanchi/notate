@@ -6,19 +6,30 @@ import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 import { getUser } from "./server/server";
 
 const App = () => {
-  const [accessToken, setAccessToken] = useState(true);
+  const [accessToken, setAccessToken] = useState(null);
+  const [botId, setBotId] = useState(null);
+
+  const handleUserChange = (accessToken, botId) => {
+    setAccessToken(accessToken);
+    setBotId(botId);
+  };
 
   // gets the URL
   useEffect(() => {
     // try to load the user
     chrome.storage.local.get(["botId"]).then((result) => {
-      async function loadUser(){
+      async function loadUser() {
         if (!result.botId) return;
-        const { _, accessToken } = await getUser(result.botId);
+        const user = await getUser(result.botId);
+
+        const { accessToken, _id } = user;
         setAccessToken(accessToken);
+        setBotId(_id);
+
         chrome.storage.session.set({ accessToken: accessToken });
+        chrome.storage.local.set({ botId: _id });
       }
-      loadUser()
+      loadUser();
     });
   }, []);
 
@@ -31,7 +42,13 @@ const App = () => {
           <Route path="/" element={<></>} />
           <Route
             path="account"
-            element={<Account accessToken={accessToken} />}
+            element={
+              <Account
+                propAccessToken={accessToken}
+                propBotId={botId}
+                handleUserChange={handleUserChange}
+              />
+            }
           />
           <Route index element={<Main propAccessToken={accessToken} />} />
         </Routes>
