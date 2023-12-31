@@ -1,7 +1,7 @@
-## Interact with Webpages Better
+## Engage with Webpages better 
 
-This chrome extension allows me to: 
+This chrome extension allows users to:
   1) copy text on any webpage
-  2) highlight this text
-  3) view my highlighted snippets in a consolidated UI 
-  4) Send it to a notion page.
+  2) highlight it
+  3) view their highlighted snippets in a consolidated UI 
+  4) send it to a notion page
