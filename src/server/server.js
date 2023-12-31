@@ -1,7 +1,8 @@
 const url = process.env.REACT_APP_SERVER_URL
 
-export async function addUser(botId, accessToken){
+export async function addUser(botId, accessToken, profile){
     try{
+        if(!botId || !accessToken || !profile) return false;
         const options = {
             method: 'POST',
             headers: {
@@ -9,7 +10,8 @@ export async function addUser(botId, accessToken){
             },
             body: JSON.stringify({
                 botId: botId,
-                accessToken: accessToken
+                accessToken: accessToken,
+                profile: profile
             })
         }
         const response =  await fetch(`${url}/addUser`, options)

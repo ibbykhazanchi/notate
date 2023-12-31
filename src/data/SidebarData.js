@@ -1,18 +1,12 @@
 import React from 'react'
 import { FaUser } from "react-icons/fa";
-import { AiFillHome, AiFillSetting } from "react-icons/ai";
+import { AiFillHome } from "react-icons/ai";
 
 export const SidebarData = [
     {
         title: "Home",
         path: '/',
         icon: <AiFillHome />,
-        cName: 'nav-text'
-    },
-    {
-        title: "Configure",
-        path: '/configure',
-        icon: <AiFillSetting />,
         cName: 'nav-text'
     },
     {

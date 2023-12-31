@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
-import { Button } from 'react-bootstrap'
-import { getAccessToken } from '../Notion'
+import { Button, Container} from 'react-bootstrap'
+import { authenticateNotionUser } from '../Notion'
 import { CHROME_STORAGE_BOT_ID_KEY, CHROME_STORAGE_ACCESS_TOKEN_KEY } from "../model";
+import { addUser } from "../server/server";
+import Profile from '../components/Profile';
 
-const Account = ({propBotId, propAccessToken, emitUserChange}) => {
+const Account = ({propBotId, propAccessToken, propProfile, emitUserChange}) => {
 
   const [botId, setBotId] = useState(propBotId)
   const [accessToken, setAccessToken] = useState(propAccessToken)
+  const [profile, setProfile] = useState(propProfile)
 
   const authenticate = () => {
     chrome.identity.launchWebAuthFlow({
@@ -16,19 +19,30 @@ const Account = ({propBotId, propAccessToken, emitUserChange}) => {
       const url = new URL(responseUrl)
       const urlParams = new URLSearchParams(url.searchParams)
       const code = urlParams.get("code");
-      const {bot_id, access_token} = await getAccessToken(code)
+      const {bot_id, access_token, profile} = await authenticateNotionUser(code)
 
       setBotId(bot_id)
       setAccessToken(access_token)
+      setProfile(profile)
 
-      emitUserChange(bot_id, access_token)
+      // save user in storage & db
+      saveUser(bot_id, access_token, profile)
+
+      // emit user change to parent
+      emitUserChange(bot_id, access_token, profile)
     });
   }
 
-  const signOut = () => {
-    chrome.storage.local.remove([CHROME_STORAGE_BOT_ID_KEY])
-    chrome.storage.session.remove([CHROME_STORAGE_ACCESS_TOKEN_KEY])
+  const saveUser = (bot_id, access_token, profile) => {
+    chrome.storage.local.set({[CHROME_STORAGE_BOT_ID_KEY]: bot_id})
+    chrome.storage.session.set({[CHROME_STORAGE_ACCESS_TOKEN_KEY]: access_token})
+  
+    addUser(bot_id, access_token, profile)
+  }
 
+  const signOut = () => {
+    chrome.storage.session.clear()
+    chrome.storage.local.clear()
     wipeState()
   }
 
@@ -42,25 +56,30 @@ const Account = ({propBotId, propAccessToken, emitUserChange}) => {
   const wipeState = () => {
     setAccessToken(null)
     setBotId(null)
+    setProfile(null)
 
     emitUserChange(null, null)
   }
 
   return (
     <>
-    {(!accessToken && !botId) ? (
-      <Button onClick={authenticate}> 
-        Sign into Notion
-      </Button>
-    ): (
-      <>
-        <h1> You are signed in! </h1>
-        <Button onClick={signOut}>
-          Sign out of your Snip.It Account
+    <Container className="text-center">
+      <Profile profile={profile}/>
+      {(!accessToken && !botId && !profile) ? (
+        <Button onClick={authenticate}> 
+          Sign into Notion
         </Button>
-      </>
-    )}
-    <Button onClick={clearData}> Clear All Snip.it Data </Button>
+      ): (
+        <>
+          <Button onClick={signOut}>
+            Sign out
+          </Button>
+        </>
+      )}
+      <div className='fixed-bottom text-center mb-3'>
+        <Button onClick={clearData}> Clear All Snip.it Data </Button>
+      </div>
+    </Container>
     </>
   )
 }

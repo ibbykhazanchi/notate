@@ -1,25 +1,23 @@
 import { Client } from "@notionhq/client";
 import { Buffer } from "buffer";
-import { addUser } from "./server/server";
-import { CHROME_STORAGE_BOT_ID_KEY, CHROME_STORAGE_ACCESS_TOKEN_KEY } from "./model";
 
 let notion = null;
 
 const getClient = async () => {
-  if(!notion){
-    const response = await chrome.storage.session.get(["accessToken"])
+  if (!notion) {
+    const response = await chrome.storage.session.get(["accessToken"]);
     const accessToken = response.accessToken;
-    if(accessToken){
-      notion = new Client({ auth: accessToken});
+    if (accessToken) {
+      notion = new Client({ auth: accessToken });
     }
   }
-  return notion
-}
+  return notion;
+};
 
 export const getFolders = async () => {
   try {
-    const notion = await getClient()
-    if(!notion) return
+    const notion = await getClient();
+    if (!notion) return;
 
     const response = await notion.search({
       filter: {
@@ -31,15 +29,15 @@ export const getFolders = async () => {
         timestamp: "last_edited_time",
       },
     });
-    const pageObjects = []
-    for(const pageObj of response.results) {
-      if(pageObj.properties.title && pageObj.properties.title.title[0]){
+    const pageObjects = [];
+    for (const pageObj of response.results) {
+      if (pageObj.properties.title && pageObj.properties.title.title[0]) {
         pageObjects.push({
           id: pageObj.id,
           title: pageObj.properties.title.title[0].plain_text,
         });
       }
-    };
+    }
     return pageObjects;
   } catch (error) {
     console.error(error);
@@ -49,8 +47,8 @@ export const getFolders = async () => {
 
 const createNotionPage = async (title, parentId) => {
   try {
-    const notion = getClient()
-    if(!notion) return 
+    const notion = getClient();
+    if (!notion) return;
     const response = await notion.pages.create({
       parent: {
         type: "page_id",
@@ -87,8 +85,8 @@ export const sendSnippetsToNotion = async (snippets, id) => {
   // variable that will hold the parent page
   let parentPageId = id;
 
-  const notion = await getClient()
-  if(!notion) return
+  const notion = await getClient();
+  if (!notion) return;
 
   // send to notion
   const response = await notion.blocks.children.append({
@@ -124,20 +122,33 @@ const mapSnippetsToBlocks = (snippets) => {
   return blocks;
 };
 
-export const getAccessToken = async (code) => {
-  const clientId = process.env.REACT_APP_CLIENT_ID
-  const clientSecret = process.env.REACT_APP_CLIENT_SECRET
-  const redirectURL = process.env.REACT_APP_REDIRECT_URL
+const createOwnerProfile = (owner) => {
+  if (owner.user.type !== "person") {
+    return;
+  }
+
+  const ownerObj = {
+    avatar: owner.user.avatar_url || null,
+    name: owner.user.name || null,
+    email: owner.user.person.email || null,
+  };
+  return ownerObj;
+};
+
+export const authenticateNotionUser = async (code) => {
+  const clientId = process.env.REACT_APP_CLIENT_ID;
+  const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
+  const redirectURL = process.env.REACT_APP_REDIRECT_URL;
 
   const encoded = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 
   const response = await fetch("https://api.notion.com/v1/oauth/token", {
     method: "POST",
     headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    Authorization: `Basic ${encoded}`,
-  },
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Basic ${encoded}`,
+    },
     body: JSON.stringify({
       grant_type: "authorization_code",
       code: code,
@@ -145,13 +156,8 @@ export const getAccessToken = async (code) => {
     }),
   });
 
-  const data = await response.json()
-  const {bot_id, access_token, owner} = data
-
-  chrome.storage.local.set({[CHROME_STORAGE_BOT_ID_KEY]: bot_id})
-  chrome.storage.session.set({[CHROME_STORAGE_ACCESS_TOKEN_KEY]: access_token})
-
-  addUser(bot_id, access_token)
-  
-  return {bot_id: bot_id, access_token: access_token}
-}
+  const data = await response.json();
+  const { bot_id, access_token, owner } = data;
+  const ownerProfile = createOwnerProfile(owner);
+  return { bot_id: bot_id, access_token: access_token, profile: ownerProfile };
+};

@@ -9,10 +9,12 @@ import { CHROME_STORAGE_BOT_ID_KEY, CHROME_STORAGE_ACCESS_TOKEN_KEY } from "./mo
 const App = () => {
   const [botId, setBotId] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
+  const [profile, setProfile] = useState(null)
 
-  const emitUserChange = (botId, accessToken) => {
+  const emitUserChange = (botId, accessToken, profile) => {
     setBotId(botId);
     setAccessToken(accessToken);
+    setProfile(profile)
   };
 
   // gets the URL
@@ -24,9 +26,10 @@ const App = () => {
         const user = await getUser(result.botId);
         if(!user) return;
 
-        const { _id, accessToken } = user;
+        const { _id, accessToken, profile } = user;
         setBotId(_id);
         setAccessToken(accessToken);
+        setProfile(profile)
 
         chrome.storage.local.set({[CHROME_STORAGE_BOT_ID_KEY]: _id });
         chrome.storage.session.set({[CHROME_STORAGE_ACCESS_TOKEN_KEY]: accessToken });
@@ -48,6 +51,7 @@ const App = () => {
               <Account
                 propBotId={botId}
                 propAccessToken={accessToken}
+                propProfile={profile}
                 emitUserChange={emitUserChange}
               />
             }
