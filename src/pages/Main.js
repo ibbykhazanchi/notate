@@ -8,14 +8,14 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Accordion from "react-bootstrap/Accordion";
 import 'animate.css'
 
-const Main = ({accessToken}) => {
+const Main = ({propAccessToken}) => {
   const [url, setUrl] = useState("");
   const [snippets, setSnippets] = useState([]);
-  const [title, setTitle] = useState("");
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const target = useRef(null);
   const [showAlert, setShowAlert] = useState(false);
+  const [tooltipMessage, setTooltipMessage] = useState("")
 
   useEffect(() => {
     const queryInfo = { active: true, lastFocusedWindow: true };
@@ -53,16 +53,18 @@ const Main = ({accessToken}) => {
     fetchData();
   }, []);
 
-  const handleChange = (event) => {
-    setTitle(event.target.value);
-  };
-
   const setFolder = (obj) => {
     setSelectedFolder(obj);
   };
 
   const handleSubmit = () => {
-    if (!selectedFolder) {
+    if (!selectedFolder || !propAccessToken) {
+      if(!propAccessToken){
+        setTooltipMessage("you must be signed in")
+      }
+      else if(!selectedFolder){
+        setTooltipMessage("you must provide a valid notion folder")
+      }
       //shake & trigger a popup
       setShowAlert(true)
       const element = document.getElementById('shipButton')
@@ -82,13 +84,24 @@ const Main = ({accessToken}) => {
     ) {
       // clear snippets
       setSnippets([]);
-      setTitle("");
 
       // delete cached snippets
       chrome.storage.local.remove(url);
 
       // remove highlights from html
       removeHighlights();
+
+      // give a success message
+      setTooltipMessage("sent! 🚀")
+      setShowAlert(true)
+      const element = document.getElementById('shipButton')
+      element.classList.add('animate__animated', 'animate__pulse');
+      setTimeout(() => {
+        setShowAlert(false);
+        element.classList.remove('animate__animated', 'animate__pulse')
+      }, 3000)
+    } else {
+
     }
   };
 
@@ -136,7 +149,7 @@ const Main = ({accessToken}) => {
             <Overlay target={target.current} show={showAlert} placement="top">
             {(props) => (
               <Tooltip id="overlay-example" {...props}>
-                you must provide a valid notion folder
+                {tooltipMessage}
               </Tooltip>
             )}
           </Overlay>
