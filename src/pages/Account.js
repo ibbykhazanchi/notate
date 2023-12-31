@@ -76,7 +76,7 @@ const Account = ({propBotId, propAccessToken, propProfile, emitUserChange}) => {
           </Button>
         </>
       )}
-      <div className='fixed-bottom text-center mb-3'>
+      <div className='fixed-bottom text-center mb-3' style={{zIndex:2}}>
         <Button onClick={clearData}> Clear All Snip.it Data </Button>
       </div>
     </Container>

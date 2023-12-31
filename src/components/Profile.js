@@ -2,10 +2,18 @@ import React from "react";
 import { Image } from "react-bootstrap";
 
 const Profile = ({ profile }) => {
+
+  const getAvatar = (profile) =>{
+    if(!profile || !profile.avatar){
+      return chrome.runtime.getURL("/blankUser.png")
+    }
+    return profile.avatar
+  }
+
   return (
     <div className="text-center">
       <Image
-        src={profile ? profile.avatar : chrome.runtime.getURL("/blankUser.png")}
+        src={getAvatar(profile)}
         roundedCircle
         style={{ height: "150px", width: "150px" }}
       />
