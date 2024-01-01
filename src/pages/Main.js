@@ -58,9 +58,12 @@ const Main = ({propAccessToken}) => {
   };
 
   const handleSubmit = () => {
-    if (!selectedFolder || !propAccessToken) {
+    if (!selectedFolder || !propAccessToken || !snippets || !snippets.length) {
       if(!propAccessToken){
         setTooltipMessage("you must be signed in")
+      }
+      else if(!snippets || !snippets.length){
+        setTooltipMessage("no snippets to send")
       }
       else if(!selectedFolder){
         setTooltipMessage("you must provide a valid notion folder")
@@ -72,7 +75,7 @@ const Main = ({propAccessToken}) => {
       setTimeout(() => {
         setShowAlert(false);
         element.classList.remove('animate__animated', 'animate__headShake')
-      }, 7000)
+      }, 5000)
     } else {
       sendToNotionHandler();
     }
