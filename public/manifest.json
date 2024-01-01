@@ -15,16 +15,12 @@
   "permissions": [
     "tabs",
     "identity",
-    "activeTab",
     "storage"
-  ],
-  "host_permissions":[
-    "<all_urls>"
   ],
   "web_accessible_resources": [
     {
       "resources": ["blankUser.png"],
-      "matches": ["<all_urls>"]
+      "matches": ["https://cinhfdgbkjkhpgpjcbigdglcfmigfccj.chromiumapp.org/*"]
     }
   ],
   "content_scripts": [
