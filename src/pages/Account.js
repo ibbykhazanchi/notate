@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Container} from 'react-bootstrap'
-import { authenticateNotionUser } from '../Notion'
 import { CHROME_STORAGE_BOT_ID_KEY, CHROME_STORAGE_ACCESS_TOKEN_KEY } from "../model";
-import { addUser } from "../server/server";
+import { addUser, authenticateWithNotion } from "../server/server";
 import Profile from '../components/Profile';
 
 const Account = ({propBotId, propAccessToken, propProfile, emitUserChange}) => {
@@ -19,8 +18,12 @@ const Account = ({propBotId, propAccessToken, propProfile, emitUserChange}) => {
       const url = new URL(responseUrl)
       const urlParams = new URLSearchParams(url.searchParams)
       const code = urlParams.get("code");
-      const {bot_id, access_token, profile} = await authenticateNotionUser(code)
-
+      const response = await authenticateWithNotion(code)
+      if(!response){
+        return null;
+      }
+      const {bot_id, access_token, profile} = response
+      
       setBotId(bot_id)
       setAccessToken(access_token)
       setProfile(profile)

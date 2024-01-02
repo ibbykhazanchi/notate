@@ -1,5 +1,4 @@
 import { Client } from "@notionhq/client";
-import { Buffer } from "buffer";
 
 let notion = null;
 
@@ -120,44 +119,4 @@ const mapSnippetsToBlocks = (snippets) => {
     };
   });
   return blocks;
-};
-
-const createOwnerProfile = (owner) => {
-  if (owner.user.type !== "person") {
-    return;
-  }
-
-  const ownerObj = {
-    avatar: owner.user.avatar_url || null,
-    name: owner.user.name || null,
-    email: owner.user.person.email || null,
-  };
-  return ownerObj;
-};
-
-export const authenticateNotionUser = async (code) => {
-  const clientId = process.env.REACT_APP_CLIENT_ID;
-  const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
-  const redirectURL = process.env.REACT_APP_REDIRECT_URL;
-
-  const encoded = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
-
-  const response = await fetch("https://api.notion.com/v1/oauth/token", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Basic ${encoded}`,
-    },
-    body: JSON.stringify({
-      grant_type: "authorization_code",
-      code: code,
-      redirect_uri: redirectURL,
-    }),
-  });
-
-  const data = await response.json();
-  const { bot_id, access_token, owner } = data;
-  const ownerProfile = createOwnerProfile(owner);
-  return { bot_id: bot_id, access_token: access_token, profile: ownerProfile };
 };
