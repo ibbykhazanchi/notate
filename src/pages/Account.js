@@ -70,7 +70,7 @@ const Account = ({propBotId, propAccessToken, propProfile, emitUserChange}) => {
       <Profile profile={profile}/>
       {(!accessToken && !botId && !profile) ? (
         <Button onClick={authenticate}> 
-          Sign into Notion
+          Sign in
         </Button>
       ): (
         <>
@@ -80,7 +80,7 @@ const Account = ({propBotId, propAccessToken, propProfile, emitUserChange}) => {
         </>
       )}
       <div className='fixed-bottom text-center mb-3' style={{zIndex:2}}>
-        <Button onClick={clearData}> Clear All Snip.it Data </Button>
+        <Button onClick={clearData}> Clear All Notate Data </Button>
       </div>
     </Container>
     </>
