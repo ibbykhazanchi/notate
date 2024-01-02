@@ -8,9 +8,9 @@
     "default_title": "Open the popup"
   },
   "icons": {
-    "16": "logo192.png",
-    "48": "logo192.png",
-    "128": "logo192.png"
+    "16": "notate-logo.png",
+    "48": "notate-logo.png",
+    "128": "notate-logo.png"
   },
   "permissions": [
     "tabs",
