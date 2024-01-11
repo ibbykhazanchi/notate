@@ -3,6 +3,7 @@
   "description": "notate some text & save it to Notion",
   "version": "1.0",
   "manifest_version": 3,
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgmjVC1sjZs1f83WqfpKkW3vMjuz+iFCBylcHr1TMCbYJnkMk4XAThlAdfG7ndYq2NT016Dvl1jEqKJaeRuf4PdQT8MgwrGEBARCybHFRYNJfosLwZ/wH7sYo/NoLpwa306751SXSZyO8id0B7gt5ZFQNOGPu3lN+rQdoAx4gsN7PcIGY7t1RcJEv2gNKUj+QzWO0ci9PXPZCri5fwFl2jU6IhpEhp0uqJhhaKDvowlUZtlSCKJ5XZB1TAM7jMOu0RGSpa5W34w7dSD6ixGvUUE9oOasdoZ7eVjzGyyjKmfTkVOPRQSzsv48c2yIoZnbtXjE2y0i08ME5MMp4lOidgQIDAQAB",
   "action": {
     "default_popup": "index.html",
     "default_title": "Open the popup"
